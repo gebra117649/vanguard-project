@@ -3,6 +3,7 @@
 ## Table of Contents
 
 - [Team Members](#team-members)
+- [Executive Summary](#executive-summary)
 - [Business Overview](#business-overview)
 - [Business Questions](#business-questions)
 - [Dataset](#dataset)
@@ -10,6 +11,7 @@
 - [Python Analysis](#python-analysis)
 - [Key Findings](#key-findings)
 - [Business Recommendations](#business-recommendations)
+- [Limitations](#limitations)
 - [Presentation](#presentation)
 - [Repository Structure](#repository-structure)
 - [How to Run the Project](#how-to-run-the-project)
@@ -21,6 +23,14 @@
 - Telma Guerreiro
 - Erzsebet Fuzes
 - Marta Atencia
+
+## Executive Summary
+
+This project evaluates Vanguard’s redesigned website through an A/B test, examining session completion, navigation friction, client age, and performance across different time periods.
+
+The redesign increased session completion by **2.95 percentage points**, below the **5-point target**. High-friction journeys were more common in Test, with the largest increase in navigation friction at **step_1**. Clients aged 48 and above were less likely to record a successful visit, and the observed age-related performance gap remained with both interfaces.
+
+We recommend investigating the difficulties at step_1, improving instructions and access to guidance, and monitoring whether these changes benefit different client groups. A gradual rollout would allow Vanguard to assess completion, friction, and support demand before expanding the redesign to all clients.
 
 ## Business Overview
 
@@ -126,16 +136,25 @@ We compared completion, friction, and median session duration across the three p
 
 ### H1 — Session completion and friction
 
+### H1 — Session completion and friction
+
 | Metric | Control | Test | Test minus Control |
 |---|---:|---:|---:|
 | Session completion rate | 28.72% | 31.67% | +2.95 percentage points |
 | High-friction journey rate | 50.67% | 60.15% | +9.48 percentage points |
 | Navigation friction from `step_1` | 12.08% | 22.00% | +9.92 percentage points |
 | Navigation friction from `step_3` | 19.94% | 18.33% | −1.61 percentage points |
+| Median Effective Time | 114 seconds | 112 seconds | −2 seconds |
 
-The one-sided completion test gave **p = 8.527 × 10⁻⁹**. We rejected H₀ at the 5% significance level and concluded that the completion improvement fell short of the **5-percentage-point target**.
+Test recorded approximately **three additional completed sessions per 100 sessions**, but the improvement fell short of the **5-percentage-point target**. The one-sided test accounted for multiple visits from the same client and gave **p = 8.527 × 10⁻⁹**, supporting a completion-rate difference below the target.
 
-The friction comparisons were descriptive. Backward moves had the largest gap among the navigation behaviors (**+6.57 percentage points**). The largest increase in step-level navigation friction occurred at `step_1`. `step_3` was the only step with a lower observed navigation friction rate in Test.
+Higher completion came alongside more high-friction journeys. **60.15% of Test sessions** met at least one friction criterion, compared with **50.67% in Control**. Backward moves showed the largest descriptive increase (**+6.57 percentage points**), followed by repeats (**+4.36**) and skips (**+0.94**).
+
+The largest step-level navigation gap occurred at **`step_1`**, where **22.00% of Test visits** experienced friction compared with **12.08% of Control visits**. This makes it the clearest starting point for investigating navigation difficulties. **`step_3`** was the only step with lower observed navigation friction in Test.
+
+Effective Time, calculated by summing intervals associated with forward moves of exactly one step, was slightly lower in Test. Its median decreased by **two seconds**, while its mean decreased from **171.18 to 163.27 seconds**. Because this comparison includes incomplete sessions, lower Effective Time may reflect faster progression or fewer steps completed. These timing and friction comparisons are descriptive.
+
+Together, the findings support refining the redesign, particularly at `step_1`, and monitoring completion alongside friction before expanding the rollout.
 
 ### H2 — Success and attempts by age
 
@@ -145,9 +164,15 @@ The friction comparisons were descriptive. Backward moves had the largest gap am
 | Mean attempts among successful clients | 1.149 | 1.250 |
 | Median attempts among successful clients | 1 | 1 |
 
-The one-sided Welch’s test supported the hypothesis that younger successful clients needed fewer attempts on average (**p = 1.36 × 10⁻³²**). The difference was about **0.10 attempts**, and the median was one attempt in both groups. The descriptive gap in whether a client succeeded at least once was **14.62 percentage points**.
+Younger clients were **14.62 percentage points** more likely to record a successful visit. Among successful clients, they needed about **0.10 fewer attempts** on average. This difference was statistically significant overall (**p = 1.36 × 10⁻³²**) and within both Test and Control.
 
-Both age groups had higher observed client success rates in Test. The age gap was **14.04 percentage points in Control** and **15.04 in Test**. These figures describe the observed gap. The statistical test assessed attempts to success by age.
+Both age groups had higher success rates and fewer average attempts in Test. However, the observed age gap in success rates widened from **14.04 percentage points in Control** to **15.04 in Test**. Whether the redesign changed this gap was not tested directly.
+
+Among successful clients, median account balances were generally higher for those requiring more attempts, suggesting that Vanguard could investigate whether these clients would benefit from additional digital assistance.
+
+Older clients recorded slightly more calls on average, although the median was **three across all groups**. These historical calls cannot be directly linked to difficulties during the digital process.
+
+### H3 — Performance by time period
 
 ### H3 — Performance by time period
 
@@ -157,19 +182,41 @@ Both age groups had higher observed client success rates in Test. The age gap wa
 | Weekday off-hours | 26,069 | 37.54% |
 | Weekend | 14,848 | 21.38% |
 
-Weekday market hours were the busiest period. The initial H3 run also showed the largest observed completion gain during that period. The final H3 run will verify whether that pattern holds under the shared completion definition.
+The redesign’s largest observed completion gains occurred during **weekday market hours**, the busiest period. Strict completion increased from **31.48% to 35.22%**, a difference of **3.74 percentage points**, while overall completion increased from **53.10% to 62.14%**, a difference of **9.04 points**. The reported share of sessions with backward moves fell from **1.57% to 0.40%**, a relative reduction of approximately **75%**.
+
+Test also recorded higher completion during weekday off-hours (**+2.48 percentage points strict and +8.81 points overall**) and weekends (**+2.28 points strict and +7.73 points overall**). Reported backward-move rates decreased by approximately **47%** and **41%**, respectively. Median session duration increased most on weekends (**15 seconds**, compared with **6 seconds** during market hours). Longer durations could reflect more browsing, more progress, or other differences in session behavior.
+
+Composite friction was higher in Test across all periods (**+6.31 to +7.63 percentage points**). Visits beginning at a later step were also more common, increasing from approximately **4% to 10.43%–12.07%**. These visits may include resumed journeys, although confirming that explanation requires linking them to earlier incomplete visits.
+
+Average and median ages were similar between Test and Control within each period, providing reassurance about age balance. These descriptive findings support considering a phased rollout, beginning during lower-traffic periods to monitor stability and journey performance before expanding to market hours.
 
 ## Business Recommendations
 
-1. **Refine the redesign before a full rollout.** Session completion rose from **28.72% to 31.67%**, a gain of **2.95 percentage points** against a 5-point target. High-friction journeys also rose from **50.67% to 60.15%**. Run a follow-up A/B test with the same completion target and agree in advance on the highest acceptable friction rate.
+1. **Refine the redesign before expanding the rollout.** Investigate the steps contributing most to navigation friction and assess targeted improvements through usability research, performance monitoring, and controlled testing where useful. Agree on acceptable completion and friction rates before expanding access.
 
-2. **Use heatmaps and usability testing to diagnose `step_1`.** Navigation friction at `step_1` rose from **12.08% to 22.00%**, the largest increase of any step. Build a **step-transition heatmap** from the event logs to compare where Test and Control visits moved next, including repeats, backward moves, skips, and exits. In a follow-up study, use **click and scroll heatmaps** to see which controls clients interact with and how far they scroll. Pair these with short usability sessions to decide whether to clarify the main action, revise the instructions, or change when a prompt appears.
+2. **Make step_1 easier to understand and navigate.** Use transition heatmaps and usability sessions to identify where clients hesitate, repeat actions, or move backward. Provide clearer instructions, explain what information is required, and make the next action and access to help easy to find. Test when guidance is most useful so additional prompts support progress without overwhelming clients.
 
 3. **Make it easier for clients to reach their first success.** During the experiment, **34.35% of clients aged 48 and above** recorded at least one successful visit, compared with **48.97% of clients under 48**. The median among clients who succeeded was one attempt in both groups. Include clients aged 48 and above in usability testing, and test clearer instructions, a visible progress indicator, or optional help after a repeated step. Separately, check whether visits that begin midway through the process follow an earlier incomplete visit. If that pattern reflects clients returning to finish, test a “Continue where you left off” option.
 
 4. **Measure whether better guidance reduces support costs.** Clients aged 48 and above had slightly more historical calls to Vanguard in both groups. In the next A/B test, capture support contacts related to the online process and track the number of contacts per 100 clients, average handling time, and cost per contact. Use those measures alongside completion rates to see whether clearer instructions and easier access to help improve first-time success and reduce the cost of supporting clients.
 
 5. **Use a phased rollout if the follow-up test meets the success criteria.** Start with a limited release during a lower-traffic period to check stability and confirm that completion and friction are tracking as expected. Then validate the experience during weekday market hours, which accounted for **41.08% of recorded sessions** under the Eastern Time assumption. Review both metrics before expanding to all clients.
+
+6. **Investigate difficulties among clients with higher account balances.** Explore whether personalised guidance could improve their digital experience.
+
+7. **Monitor performance by age group.** Track success rates, first-attempt success, average attempts among successful clients, and support requests to assess whether future improvements benefit different customer segments.
+
+## Limitations
+
+- **Reasons for navigation patterns.** Event logs show recorded actions but cannot explain why clients repeat steps, move backward, or leave. These behaviors may reflect difficulty, intentional navigation, or tracking issues.
+- **Time measurements and thresholds.** Completion and friction thresholds were based on the available data. Conclusions may change under different thresholds. Time between events can include inactivity, so Effective Time estimates time associated with forward progression.
+- **Session and client outcomes.** Session completion rates give more weight to clients who make more visits. They answer a different question from the percentage of clients who succeed at least once.
+- **Attempts to success.** Average attempts include only clients who succeeded during the observation period. Earlier attempts and successes after the experiment ended are unobserved.
+- **Age groups.** The age split at 48 reflects this dataset’s median. It simplifies a continuous relationship and may hide differences within each group.
+- **Account balances and historical calls.** Vanguard balances may represent only part of a client’s wealth. Calls from the previous six months cannot be directly linked to the online process or used to establish savings from the redesign.
+- **Timezone assumption.** The time-of-week analysis assumes US Eastern Time, which could not be confirmed. Its market-hours categories also use weekday opening times without accounting for market holidays.
+- **Statistical coverage.** The friction comparisons and changes in the age gap are descriptive. Separate tests within groups do not establish that the redesign’s effect differs between age groups or time periods.
+- **Causal interpretation and generalisation.** Associations between client characteristics and performance do not establish causation. The findings describe clients and behavior recorded during the 2017 experiment, so their relevance to other populations or current website use would need assessment.
 
 ## Presentation
 
